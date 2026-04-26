@@ -11,6 +11,18 @@ namespace alltomd {
             std::string input_file;
             bool stdin_mode{false};
             std::string output_file;
+
+            std::string format{"auto"};          // table, list, code, auto
+            std::string flatten_separator;       // "" = desabilitado
+            int max_depth{-1};                   // -1 = ilimitado
+            bool show_null{true};                // --no-null = false
+
+            std::string title;
+            std::string author;
+            
+            // Preview
+            bool preview_mode{false};            // --preview
+            int preview_lines{20};               // --lines (padrão 20)
             
             ConversionOptions() = default;
             

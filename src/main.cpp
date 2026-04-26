@@ -3,12 +3,14 @@
 #include <string>
 #include <alltomd/converter/JsonConverter.h>
 #include <alltomd/cli/Options.h>
+#include <alltomd/writer/MarkdownWriter.h>
 
 using namespace std;
 
 using json = nlohmann::json;
 namespace cli = alltomd::cli;
 namespace converter = alltomd::converter;
+namespace writer = alltomd::writer;
 
 int main(int argc, char* argv[]) {
     setlocale(LC_ALL, ".UTF8");
@@ -50,8 +52,30 @@ int main(int argc, char* argv[]) {
     try {
         auto data = jsonConverter.parse(conteudo);
         
-        cout << "Parsed data: " << endl;
-        cout << jsonConverter.format(data) << endl;
+        writer::WriterOptions writerOpts;
+        writerOpts.format = opts.format;
+        writerOpts.maxDepth = opts.max_depth;
+        writerOpts.showNull = opts.show_null;
+        writerOpts.previewLines = opts.preview_mode ? opts.preview_lines : -1;
+        writerOpts.title = opts.title;
+        writerOpts.author = opts.author;
+        
+        // Convert to Markdown
+        writer::MarkdownWriter mdWriter;
+        string markdown = mdWriter.convert(data, writerOpts);
+        
+        // Output
+        if (!opts.output_file.empty()) {
+            ofstream out(opts.output_file);
+            if (!out.is_open()) {
+                cerr << "Error: Could not create output file: " << opts.output_file << endl;
+                return 1;
+            }
+            out << markdown;
+            cout << "Markdown saved to: " << opts.output_file << endl;
+        } else {
+            cout << markdown << endl;
+        }
     } catch (const exception& e) {
         cerr << "Error parsing: " << e.what() << endl;
         return 1;
