@@ -16,12 +16,11 @@ int main(int argc, char* argv[]) {
     setlocale(LC_ALL, ".UTF8");
     system("chcp 65001 > nul");
 
-    auto opts = cli::parseCommandLine(argc, argv);
-    
+    cli::ConversionOptions opts;
+    int result = cli::parseCommandLine(argc, argv, opts);
+
     if (!opts.hasInput()) {
-        cerr << "Error: No input file specified." << endl;
-        cerr << "Usage: ./alltomd arquivo.json" << endl;
-        return 1;
+        return 0;
     }
     
     cout << "Input file: " << opts.input_file << endl;

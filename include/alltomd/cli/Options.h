@@ -31,7 +31,7 @@ namespace alltomd {
             }
         };
 
-        ConversionOptions parseCommandLine(int argc, char* argv[]);
+        int parseCommandLine(int argc, char* argv[], ConversionOptions& opts);
 
     } // namespace cli
 
